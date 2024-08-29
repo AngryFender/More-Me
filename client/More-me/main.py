@@ -50,10 +50,8 @@ def send_midi_serial(user,control, value, lbl):
     output_port.close()
 
 # Create a card with full-screen width
-
-
-with ui.card().classes('w-full'):  # Set width to full screen
-    ui.label("Bassist's Mix")
+with ui.card().classes('w-full').style('background-color: #f0eada; color: black;'):  # Set width to full screen
+    ui.label("Bassist's Mix").style('font-size: 20px;')
     with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
         ui.slider(min=1, max=100).bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist',60, e.value, lb_bb))
@@ -77,8 +75,8 @@ with ui.card().classes('w-full'):  # Set width to full screen
         ui.slider(min=1, max=100).bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_serial('bassist',66, e.value, lb_bov))
         lb_bov= ui.label('1')
 
-with ui.card().classes('w-full'):
-    ui.label("Tele's Mix")
+with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
+    ui.label("Tele players's Mix").style('font-size: 20px;')
     with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         ui.slider(min=1, max=100).bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
@@ -102,8 +100,8 @@ with ui.card().classes('w-full'):
         ui.slider(min=1, max=100).bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',66, e.value, lb_vov))
         lb_vov= ui.label('1')
 
-with ui.card().classes('w-full'):
-    ui.label("Prs's Mix")
+with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
+    ui.label("Prs player's Mix").style('font-size: 20px;')
     with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
         ui.label('Prs')
         ui.slider(min=1, max=100).bind_value(demo, 'prs_prs').on_value_change(lambda e: send_midi_serial('Prs-player',60, e.value, lb_pp))
@@ -127,8 +125,8 @@ with ui.card().classes('w-full'):
         ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_serial('Prs-player',66, e.value, lb_pov))
         lb_pov= ui.label('1')
 
-with ui.card().classes('w-full'):
-    ui.label("Drummer's Mix")
+with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
+    ui.label("Drummer's Mix").style('font-size: 20px;')
     with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
         ui.label('Drums')
         ui.slider(min=1, max=100).bind_value(demo, 'drums_drum').on_value_change(lambda e: send_midi_serial('Drummer',60, e.value, lb_dd))
