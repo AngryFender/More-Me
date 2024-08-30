@@ -6,35 +6,34 @@ from nicegui import ui
 
 class Demo:
     def __init__(self):
-        self.number = 1
-        self.bass_bass = 1
-        self.bass_vocal = 1
-        self.bass_back = 1
-        self.bass_prs = 1
-        self.bass_tele = 1
-        self.bass_drums = 1
-        self.bass_volume = 1
-        self.tele_tele = 1
-        self.tele_vocal = 1
-        self.tele_back = 1
-        self.tele_prs = 1
-        self.tele_bass = 1
-        self.tele_drums = 1
-        self.tele_volume = 1
-        self.prs_prs = 1
-        self.prs_vocal = 1
-        self.prs_back = 1
-        self.prs_tele = 1
-        self.prs_bass = 1
-        self.prs_drums = 1
-        self.prs_volume = 1
-        self.drums_drums = 1
-        self.drums_vocal = 1
-        self.drums_back = 1
-        self.drums_bass = 1
-        self.drums_prs = 1
-        self.drums_tele = 1
-        self.drums_volume = 1
+        self.bass_bass = 100
+        self.bass_vocal = 90
+        self.bass_back = 90
+        self.bass_prs = 90
+        self.bass_tele = 90
+        self.bass_drums = 90
+        self.bass_volume = 100
+        self.tele_tele = 100
+        self.tele_vocal = 90
+        self.tele_back = 90
+        self.tele_prs = 90
+        self.tele_bass = 90
+        self.tele_drums = 90
+        self.tele_volume = 100
+        self.prs_prs = 100
+        self.prs_vocal = 90
+        self.prs_back = 90
+        self.prs_tele = 90
+        self.prs_bass = 90
+        self.prs_drums = 90
+        self.prs_volume = 100
+        self.drums_drums = 100
+        self.drums_vocal = 90
+        self.drums_back = 90
+        self.drums_bass = 90
+        self.drums_prs = 90
+        self.drums_tele = 90
+        self.drums_volume = 100
 demo = Demo()
 # Print available output ports
 print("Available MIDI output ports:", mido.get_output_names())
