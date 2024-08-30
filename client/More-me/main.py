@@ -62,6 +62,24 @@ def send_midi_serial(user,control, value, lbl):
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={show_value}, value={midi_value}')
     output_port.close()
 
+def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
+    if not state:
+        sl1.enable()
+        sl2.enable()
+        sl3.enable()
+        sl4.enable()
+        sl5.enable()
+        sl6.enable()
+        sl7.enable()
+    else:
+        sl1.disable()
+        sl2.disable()
+        sl3.disable()
+        sl4.disable()
+        sl5.disable()
+        sl6.disable()
+        sl7.disable()
+
 # Create a card with full-screen width
 with ui.card().classes('w-full').style('background-color: #f0eada; color: black;'):  # Set width to full screen
     ui.label("Bassist's Mix").style('font-size: 20px;')
