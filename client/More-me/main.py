@@ -1,6 +1,6 @@
 import mido
+import math
 from mido import Message
-import time
 from nicegui import ui
 
 
@@ -40,12 +40,26 @@ print("Available MIDI output ports:", mido.get_output_names())
 
 # Function to send MIDI Control Change messages (simulate serial data)
 def send_midi_serial(user,control, value, lbl):
-    lbl.set_text(f'{value}')
+    normalized_value = (value - 1) / (100 - 1)
+
+    # Apply logarithmic scaling to make the upper range more sensitive
+    # Adding a small constant (e.g., 1) to avoid log(0)
+    log_transformed = math.log10(normalized_value * 9 + 1)
+
+    # Map the log-transformed value to the 0-100 range
+    percent_value = log_transformed * 100
+    show_value = round(percent_value)
+
+    scaled_value = log_transformed * 127
+    midi_value = round(scaled_value)
+
+    lbl.set_text(f'{show_value}')
     output_port = mido.open_output('custom_midi 2')
-    control_change = Message('control_change', control=control, value=value)
+
+    control_change = Message('control_change', control=control, value=midi_value)
     output_port.send(control_change)
 
-    print(f'Sent MIDI Control Change: user={user}, control={control}, value={value}')
+    print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={show_value}, value={midi_value}')
     output_port.close()
 
 # Create a card with full-screen width
