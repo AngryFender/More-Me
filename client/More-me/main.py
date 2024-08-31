@@ -35,6 +35,9 @@ class Demo:
         self.drums_tele = 90
         self.drums_volume = 100
 demo = Demo()
+
+ui.run(host='0.0.0.0', port=80)
+
 # Print available output ports
 print("Available MIDI output ports:", mido.get_output_names())
 
