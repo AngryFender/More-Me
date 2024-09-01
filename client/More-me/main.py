@@ -84,9 +84,11 @@ def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
         sl7.disable()
 
 # Create a card with full-screen width
-with ui.card().classes('w-full').style('background-color: #f0eada; color: black;'):  # Set width to full screen
-    ui.label("Bassist's Mix").style('font-size: 20px;')
-    with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
+with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
+    with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
+        ui.label("Bassist's Mix").style('font-size: 20px;')
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bd,sl_bov ))
+    with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
         sl_bb = ui.slider(min=1, max=100).classes('custom-slider').bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist', 60, e.value, lb_bb))
         lb_bb= ui.label(f'{demo.bass_bass}')
@@ -110,8 +112,10 @@ with ui.card().classes('w-full').style('background-color: #f0eada; color: black;
         lb_bov= ui.label(f'{demo.bass_volume}')
 
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
-    ui.label("Tele players's Mix").style('font-size: 20px;')
-    with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
+    with ui.row().classes('w-full justify-center').style('align-items: center;'):
+        ui.label("Tele player's Mix").style('font-size: 20px;')
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vd,sl_vov ))
+    with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         sl_vt = ui.slider(min=1, max=100).bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
         lb_vt= ui.label(f'{demo.tele_tele}')
@@ -135,8 +139,10 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         lb_vov= ui.label(f'{demo.tele_volume}')
 
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
-    ui.label("Prs player's Mix").style('font-size: 20px;')
-    with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
+    with ui.row().classes('w-full justify-center').style('align-items: center;'):
+        ui.label("Prs player's Mix").style('font-size: 20px;')
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pd, sl_pov))
+    with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Prs')
         sl_pp = ui.slider(min=1, max=100).bind_value(demo, 'prs_prs').on_value_change(lambda e: send_midi_serial('Prs-player',60, e.value, lb_pp))
         lb_pp= ui.label(f'{demo.prs_prs}')
@@ -160,8 +166,10 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         lb_pov= ui.label(f'{demo.prs_volume}')
 
 with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
-    ui.label("Drummer's Mix").style('font-size: 20px;')
-    with ui.grid().classes("w-full").style("grid-template-columns:  50px auto 30px"):
+    with ui.row().classes('w-full justify-center').style('align-items: center;'):
+        ui.label("Drummer's Mix").style('font-size: 20px;')
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dd, sl_dov))
+    with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Drums')
         sl_dd = ui.slider(min=1, max=100).bind_value(demo, 'drums_drums').on_value_change(lambda e: send_midi_serial('Drummer',60, e.value, lb_dd))
         lb_dd = ui.label(f'{demo.drums_drums}')
