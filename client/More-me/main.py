@@ -2,6 +2,7 @@ import mido
 import math
 from mido import Message
 from nicegui import ui
+from nicegui.elements.mixins.color_elements import color
 
 
 class Demo:
@@ -83,6 +84,28 @@ def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
         sl6.disable()
         sl7.disable()
 
+# Add custom CSS to change the slider colors
+ui.add_head_html('''
+<style>
+    .bass-slider .q-slider__track {
+        color: #fff0f5 !important;  /* Track color */
+    }
+
+    .bass-slider .q-slider__thumb {
+        color: #fff0f5 !important;  /* Thumb color */
+    }
+    
+    .tele-slider .q-slider__track {
+        color: #623412 !important;  /* Track color */
+    }
+
+    .tele-slider .q-slider__thumb {
+        color: #fffdd0 !important;  /* Thumb color */
+    }
+    
+</style>
+''')
+
 # Create a card with full-screen width
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
@@ -90,25 +113,25 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bd,sl_bov ))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
-        sl_bb = ui.slider(min=1, max=100).classes('custom-slider').bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist', 60, e.value, lb_bb))
+        sl_bb = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist', 60, e.value, lb_bb))
         lb_bb= ui.label(f'{demo.bass_bass}')
         ui.label('Vocal')
-        sl_bv = ui.slider(min=1, max=100).bind_value(demo, 'bass_vocal').on_value_change(lambda e: send_midi_serial('bassist',61, e.value, lb_bv))
+        sl_bv = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_vocal').on_value_change(lambda e: send_midi_serial('bassist',61, e.value, lb_bv))
         lb_bv= ui.label(f'{demo.bass_vocal}')
         ui.label('Back')
-        sl_bvk = ui.slider(min=1, max=100).bind_value(demo, 'bass_back').on_value_change(lambda e: send_midi_serial('bassist', 62, e.value, lb_bvk))
+        sl_bvk = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_back').on_value_change(lambda e: send_midi_serial('bassist', 62, e.value, lb_bvk))
         lb_bvk = ui.label(f'{demo.bass_back}')
         ui.label('Prs')
-        sl_bp = ui.slider(min=1, max=100).bind_value(demo, 'bass_prs').on_value_change(lambda e: send_midi_serial('bassist',63, e.value, lb_bp))
+        sl_bp = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_prs').on_value_change(lambda e: send_midi_serial('bassist',63, e.value, lb_bp))
         lb_bp= ui.label(f'{demo.bass_prs}')
         ui.label('Tele')
-        sl_bt = ui.slider(min=1, max=100).bind_value(demo, 'bass_tele').on_value_change(lambda e: send_midi_serial('bassist',64, e.value, lb_bt))
+        sl_bt = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_tele').on_value_change(lambda e: send_midi_serial('bassist',64, e.value, lb_bt))
         lb_bt= ui.label(f'{demo.bass_tele}')
         ui.label('Drums')
-        sl_bd = ui.slider(min=1, max=100).bind_value(demo, 'bass_drums').on_value_change(lambda e: send_midi_serial('bassist',65, e.value, lb_bd))
+        sl_bd = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_drums').on_value_change(lambda e: send_midi_serial('bassist',65, e.value, lb_bd))
         lb_bd= ui.label(f'{demo.bass_drums}')
         ui.label('Volume')
-        sl_bov = ui.slider(min=1, max=100).bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_serial('bassist',66, e.value, lb_bov))
+        sl_bov = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_serial('bassist',66, e.value, lb_bov))
         lb_bov= ui.label(f'{demo.bass_volume}')
 
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
@@ -117,25 +140,25 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vd,sl_vov ))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
-        sl_vt = ui.slider(min=1, max=100).bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
+        sl_vt = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
         lb_vt= ui.label(f'{demo.tele_tele}')
         ui.label('Vocal')
-        sl_vv = ui.slider(min=1, max=100).bind_value(demo, 'tele_vocal').on_value_change(lambda e: send_midi_serial('Tele-player',61, e.value, lb_vv))
+        sl_vv = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_vocal').on_value_change(lambda e: send_midi_serial('Tele-player',61, e.value, lb_vv))
         lb_vv= ui.label(f'{demo.tele_vocal}')
         ui.label('Back')
-        sl_vvk = ui.slider(min=1, max=100).bind_value(demo, 'tele_back').on_value_change(lambda e: send_midi_serial('Tele-player', 62, e.value, lb_vvk))
+        sl_vvk = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_back').on_value_change(lambda e: send_midi_serial('Tele-player', 62, e.value, lb_vvk))
         lb_vvk = ui.label(f'{demo.tele_back}')
         ui.label('Prs')
-        sl_vp = ui.slider(min=1, max=100).bind_value(demo, 'tele_prs').on_value_change(lambda e: send_midi_serial('Tele-player',63, e.value, lb_vp))
+        sl_vp = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_prs').on_value_change(lambda e: send_midi_serial('Tele-player',63, e.value, lb_vp))
         lb_vp= ui.label(f'{demo.tele_prs}')
         ui.label('Bass')
-        sl_vb = ui.slider(min=1, max=100).bind_value(demo, 'tele_bass').on_value_change(lambda e: send_midi_serial('Tele-player',64, e.value, lb_vb))
+        sl_vb = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_bass').on_value_change(lambda e: send_midi_serial('Tele-player',64, e.value, lb_vb))
         lb_vb= ui.label(f'{demo.tele_drums}')
         ui.label('Drums')
-        sl_vd = ui.slider(min=1, max=100).bind_value(demo, 'tele_drums').on_value_change(lambda e: send_midi_serial('Tele-player',65, e.value, lb_vd))
+        sl_vd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_drums').on_value_change(lambda e: send_midi_serial('Tele-player',65, e.value, lb_vd))
         lb_vd= ui.label(f'{demo.tele_drums}')
         ui.label('Volume')
-        sl_vov = ui.slider(min=1, max=100).bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',66, e.value, lb_vov))
+        sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',66, e.value, lb_vov))
         lb_vov= ui.label(f'{demo.tele_volume}')
 
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
