@@ -66,6 +66,21 @@ def send_midi_serial(user,control, value, lbl):
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={show_value}, value={midi_value}')
     output_port.close()
 
+# Function to send MIDI Control Change messages (simulate serial data)
+def send_midi_linear(user,control, value, lbl):
+
+    scaled_value = value * 1.27
+    midi_value = round(scaled_value)
+
+    lbl.set_text(f'{value}')
+    output_port = mido.open_output('custom_midi 3')
+
+    control_change = Message('control_change', control=control, value=midi_value)
+    output_port.send(control_change)
+
+    print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={midi_value}')
+    output_port.close()
+
 def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
     if not state:
         sl1.enable()
