@@ -183,6 +183,21 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
                 lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mt))
             lb_mt = ui.label(f'{demo.tele_tele}')
 
+            ui.label('Master Output')
+            sl_mmo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mmo))
+            lb_mmo = ui.label(f'{demo.tele_tele}')
+
+            ui.label('Lead Output')
+            sl_mlo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mlo))
+            lb_mlo = ui.label(f'{demo.tele_tele}')
+
+            ui.label('Input Gain')
+            sl_mig = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mig))
+            lb_mig = ui.label(f'{demo.tele_tele}')
+
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         sl_vt = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
