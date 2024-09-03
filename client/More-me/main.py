@@ -161,6 +161,28 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Tele player's Mix").style('font-size: 20px;')
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vd,sl_vov ))
+    with ui.card().classes('w-full').style('background-color: white; color: black;'):
+        with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
+            ui.label('Presence')
+            sl_mp = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mp))
+            lb_mp= ui.label(f'{demo.tele_tele}')
+
+            ui.label('Bass')
+            sl_mb = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mb))
+            lb_mb= ui.label(f'{demo.tele_tele}')
+
+            ui.label('Middle')
+            sl_mm = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mm))
+            lb_mm = ui.label(f'{demo.tele_tele}')
+
+            ui.label('Treble')
+            sl_mt = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'tele_tele').on_value_change(
+                lambda e: send_midi_linear('Tele-player', 60, e.value, lb_mt))
+            lb_mt = ui.label(f'{demo.tele_tele}')
+
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         sl_vt = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',60, e.value, lb_vt))
