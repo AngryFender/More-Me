@@ -110,6 +110,14 @@ ui.add_head_html('''
         color: #fff0f5 !important;  /* Thumb color */
     }
     
+    .marshal-slider .q-slider__track {
+        color: black !important;  /* Track color */
+    }
+
+    .marshal-slider .q-slider__thumb {
+        color: black !important;  /* Thumb color */
+    }
+    
     .tele-slider .q-slider__track {
         color: #623412 !important;  /* Track color */
     }
