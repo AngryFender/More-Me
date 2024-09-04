@@ -61,7 +61,7 @@ def send_midi_serial(user,control, value, lbl):
     percent_value = log_transformed * 100
     show_value = round(percent_value)
 
-    scaled_value = log_transformed * 127
+    scaled_value = log_transformed * 103
     midi_value = round(scaled_value)
 
     lbl.set_text(f'{show_value}')
