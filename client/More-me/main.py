@@ -46,8 +46,8 @@ demo = Demo()
 
 ui.run(host='0.0.0.0', port=80)
 
-# Print available output ports
-print("Available MIDI output ports:", mido.get_output_names())
+# Save available output ports
+midi_list = mido.get_output_names()
 
 # Function to send MIDI Control Change messages (simulate serial data)
 def send_midi_serial(user,control, value, lbl):
@@ -65,7 +65,7 @@ def send_midi_serial(user,control, value, lbl):
     midi_value = round(scaled_value)
 
     lbl.set_text(f'{show_value}')
-    output_port = mido.open_output('custom_midi 2')
+    output_port = mido.open_output(midi_select.value)
 
     control_change = Message('control_change', control=control, value=midi_value)
     output_port.send(control_change)
@@ -80,7 +80,7 @@ def send_midi_linear(user,control, value, lbl):
     midi_value = round(scaled_value)
 
     lbl.set_text(f'{value}')
-    output_port = mido.open_output('custom_midi 3')
+    output_port = mido.open_output(midi_select.value)
 
     control_change = Message('control_change', control=control, value=midi_value)
     output_port.send(control_change)
@@ -137,6 +137,7 @@ ui.add_head_html('''
 ''')
 
 # Create a card with full-screen width
+midi_select = ui.select(options=midi_list, with_input=False, on_change=lambda e: ui.notify(e.value)).classes('w-40')
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
         ui.label("Bassist's Mix").style('font-size: 20px;')
