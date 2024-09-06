@@ -125,6 +125,10 @@ def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8):
         sl7.disable()
         sl8.disable()
 
+def update_double_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8, sl9, sl10, sl11, sl12, sl13, sl14, sl15, sl16):
+    update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8)
+    update_slider(state, sl9, sl10, sl11, sl12, sl13, sl14, sl15, sl16)
+
 # Add custom CSS to change the slider colors
 ui.add_head_html('''
 <style>
@@ -190,7 +194,8 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Tele player's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vd,sl_vov ))
+        checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e:
+            update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov,sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo,sl_mig) )
     with ui.card().classes('w-full').style('background-color: white; color: black;'):
         sl_msw = ui.switch('High Output').bind_value(demo, 'marshal_high').on_value_change(
             lambda e: send_midi_state('Tele-player', 90, sl_msw.value))
