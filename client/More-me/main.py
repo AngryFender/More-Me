@@ -203,37 +203,37 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
 
             ui.label('Presence')
             sl_mp = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_presence').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 90, e.value, lb_mp))
+                lambda e: send_midi_linear('Tele-player', 91, e.value, lb_mp))
             lb_mp= ui.label(f'{demo.tele_tele}')
 
             ui.label('Bass')
             sl_mb = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_bass').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 91, e.value, lb_mb))
+                lambda e: send_midi_linear('Tele-player', 92, e.value, lb_mb))
             lb_mb= ui.label(f'{demo.tele_tele}')
 
             ui.label('Middle')
             sl_mm = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_middle').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 92, e.value, lb_mm))
+                lambda e: send_midi_linear('Tele-player', 93, e.value, lb_mm))
             lb_mm = ui.label(f'{demo.tele_tele}')
 
             ui.label('Treble')
             sl_mt = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_treble').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 93, e.value, lb_mt))
+                lambda e: send_midi_linear('Tele-player', 94, e.value, lb_mt))
             lb_mt = ui.label(f'{demo.tele_tele}')
 
             ui.label('Master Output')
             sl_mmo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_master_output').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 94, e.value, lb_mmo))
+                lambda e: send_midi_linear('Tele-player', 95, e.value, lb_mmo))
             lb_mmo = ui.label(f'{demo.tele_tele}')
 
             ui.label('Lead Output')
             sl_mlo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_lead_output').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 95, e.value, lb_mlo))
+                lambda e: send_midi_linear('Tele-player', 96, e.value, lb_mlo))
             lb_mlo = ui.label(f'{demo.tele_tele}')
 
             ui.label('Input Gain')
             sl_mig = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_input_gain').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 96, e.value, lb_mig))
+                lambda e: send_midi_linear('Tele-player', 97, e.value, lb_mig))
             lb_mig = ui.label(f'{demo.tele_tele}')
 
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
