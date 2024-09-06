@@ -2,18 +2,19 @@ import mido
 import math
 from mido import Message
 from nicegui import ui
-from nicegui.elements.mixins.color_elements import color
-
 
 class Demo:
     def __init__(self):
+        self.midi_port = ""
         self.bass_bass = 100
         self.bass_vocal = 90
         self.bass_back = 90
         self.bass_prs = 90
         self.bass_tele = 90
-        self.bass_drums = 90
+        self.bass_ldrums = 90
+        self.bass_rdrums = 90
         self.bass_volume = 100
+        self.marshal_high = True
         self.marshal_presence = 100
         self.marshal_bass = 100
         self.marshal_middle = 100
@@ -26,16 +27,19 @@ class Demo:
         self.tele_back = 90
         self.tele_prs = 90
         self.tele_bass = 90
-        self.tele_drums = 90
+        self.tele_ldrums = 90
+        self.tele_rdrums = 90
         self.tele_volume = 100
         self.prs_prs = 100
         self.prs_vocal = 90
         self.prs_back = 90
         self.prs_tele = 90
         self.prs_bass = 90
-        self.prs_drums = 90
+        self.prs_ldrums = 90
+        self.prs_rdrums = 90
         self.prs_volume = 100
-        self.drums_drums = 100
+        self.drums_ldrums = 100
+        self.drums_rdrums = 100
         self.drums_vocal = 90
         self.drums_back = 90
         self.drums_bass = 90
@@ -88,7 +92,20 @@ def send_midi_linear(user,control, value, lbl):
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={midi_value}')
     output_port.close()
 
-def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
+def send_midi_state(user, control, value):
+
+    output_port = mido.open_output(midi_select.value)
+    state = 0
+    if value:
+       state = 127
+
+    control_change = Message('control_change', control=control, value=state)
+    output_port.send(control_change)
+
+    print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={value}')
+    output_port.close()
+
+def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8):
     if not state:
         sl1.enable()
         sl2.enable()
@@ -97,6 +114,7 @@ def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
         sl5.enable()
         sl6.enable()
         sl7.enable()
+        sl8.enable()
     else:
         sl1.disable()
         sl2.disable()
@@ -105,6 +123,7 @@ def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7):
         sl5.disable()
         sl6.disable()
         sl7.disable()
+        sl8.disable()
 
 # Add custom CSS to change the slider colors
 ui.add_head_html('''
@@ -141,7 +160,7 @@ midi_select = ui.select(options=midi_list, with_input=False, on_change=lambda e:
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
         ui.label("Bassist's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bd,sl_bov ))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bld, sl_brd, sl_bov ))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
         sl_bb = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist', 60, e.value, lb_bb))
@@ -158,9 +177,12 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         ui.label('Tele')
         sl_bt = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_tele').on_value_change(lambda e: send_midi_serial('bassist',64, e.value, lb_bt))
         lb_bt= ui.label(f'{demo.bass_tele}')
-        ui.label('Drums')
-        sl_bd = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_drums').on_value_change(lambda e: send_midi_serial('bassist',65, e.value, lb_bd))
-        lb_bd= ui.label(f'{demo.bass_drums}')
+        ui.label('Drums left')
+        sl_bld = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_ldrums').on_value_change(lambda e: send_midi_serial('bassist',65, e.value, lb_bld))
+        lb_bld= ui.label(f'{demo.bass_ldrums}')
+        ui.label('Drums right')
+        sl_brd = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_rdrums').on_value_change(lambda e: send_midi_serial('bassist', 65, e.value, lb_brd))
+        lb_brd = ui.label(f'{demo.bass_ldrums}')
         ui.label('Volume')
         sl_bov = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_serial('bassist',66, e.value, lb_bov))
         lb_bov= ui.label(f'{demo.bass_volume}')
@@ -221,10 +243,13 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         lb_vp= ui.label(f'{demo.tele_prs}')
         ui.label('Bass')
         sl_vb = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_bass').on_value_change(lambda e: send_midi_serial('Tele-player',104, e.value, lb_vb))
-        lb_vb= ui.label(f'{demo.tele_drums}')
-        ui.label('Drums')
-        sl_vd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_drums').on_value_change(lambda e: send_midi_serial('Tele-player',105, e.value, lb_vd))
-        lb_vd= ui.label(f'{demo.tele_drums}')
+        lb_vb= ui.label(f'{demo.tele_bass}')
+        ui.label('Drums left')
+        sl_vld = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_ldrums').on_value_change(lambda e: send_midi_serial('Tele-player', 105, e.value, lb_vld))
+        lb_vld = ui.label(f'{demo.tele_ldrums}')
+        ui.label('Drums right')
+        sl_vrd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_rdrums').on_value_change(lambda e: send_midi_serial('Tele-player',105, e.value, lb_vrd))
+        lb_vrd= ui.label(f'{demo.tele_rdrums}')
         ui.label('Volume')
         sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',106, e.value, lb_vov))
         lb_vov= ui.label(f'{demo.tele_volume}')
@@ -232,7 +257,7 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Prs player's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pd, sl_pov))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pld, sl_prd, sl_pov))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Prs')
         sl_pp = ui.slider(min=1, max=100).bind_value(demo, 'prs_prs').on_value_change(lambda e: send_midi_serial('Prs-player',0, e.value, lb_pp))
@@ -249,10 +274,12 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         ui.label('Bass')
         sl_pb = ui.slider(min=1, max=100).bind_value(demo, 'prs_bass').on_value_change(lambda e: send_midi_serial('Prs-player',4, e.value, lb_pb))
         lb_pb= ui.label(f'{demo.prs_bass}')
-        ui.label('Drums')
-        sl_pd = ui.slider(min=1, max=100).bind_value(demo, 'prs_drums').on_value_change(lambda e: send_midi_serial('Prs-player',5, e.value, lb_pd))
-        sl_pd.on_value_change(lambda e: send_midi_serial('Prs-player',6, e.value, lb_pb))
-        lb_pd= ui.label(f'{demo.prs_drums}')
+        ui.label('Drums left')
+        sl_pld = ui.slider(min=1, max=100).bind_value(demo, 'prs_ldrums').on_value_change(lambda e: send_midi_serial('Prs-player', 5, e.value, lb_pld))
+        lb_pld= ui.label(f'{demo.prs_ldrums}')
+        ui.label('Drums right')
+        sl_prd = ui.slider(min=1, max=100).bind_value(demo, 'prs_rdrums').on_value_change(lambda e: send_midi_serial('Prs-player',5, e.value, lb_prd))
+        lb_prd= ui.label(f'{demo.prs_rdrums}')
         ui.label('Volume')
         sl_pov = ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_serial('Prs-player',7, e.value, lb_pov))
         lb_pov= ui.label(f'{demo.prs_volume}')
@@ -260,11 +287,14 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
 with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Drummer's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dd, sl_dov))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dld, sl_drd, sl_dov))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
-        ui.label('Drums')
-        sl_dd = ui.slider(min=1, max=100).bind_value(demo, 'drums_drums').on_value_change(lambda e: send_midi_serial('Drummer',60, e.value, lb_dd))
-        lb_dd = ui.label(f'{demo.drums_drums}')
+        ui.label('Drums left')
+        sl_dld = ui.slider(min=1, max=100).bind_value(demo, 'drums_ldrums').on_value_change(lambda e: send_midi_serial('Drummer', 60, e.value, lb_dld))
+        lb_dld = ui.label(f'{demo.drums_ldrums}')
+        ui.label('Drums right')
+        sl_drd = ui.slider(min=1, max=100).bind_value(demo, 'drums_rdrums').on_value_change(lambda e: send_midi_serial('Drummer',60, e.value, lb_drd))
+        lb_drd = ui.label(f'{demo.drums_rdrums}')
         ui.label('Vocal')
         sl_dv = ui.slider(min=1, max=100).bind_value(demo, 'drums_vocal').on_value_change(lambda e: send_midi_serial('Drummer',61, e.value, lb_dv))
         lb_dv= ui.label(f'{demo.drums_vocal}')
