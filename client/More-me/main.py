@@ -192,7 +192,10 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         ui.label("Tele player's Mix").style('font-size: 20px;')
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vd,sl_vov ))
     with ui.card().classes('w-full').style('background-color: white; color: black;'):
+        sl_msw = ui.switch('High Output').bind_value(demo, 'marshal_high').on_value_change(
+            lambda e: send_midi_state('Tele-player', 90, sl_msw.value))
         with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
+
             ui.label('Presence')
             sl_mp = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_presence').on_value_change(
                 lambda e: send_midi_linear('Tele-player', 90, e.value, lb_mp))
