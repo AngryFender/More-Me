@@ -1,7 +1,7 @@
 import mido
 import math
 from mido import Message
-from nicegui import ui
+from nicegui import app, ui
 
 class Demo:
     def __init__(self):
@@ -52,6 +52,18 @@ ui.run(host='0.0.0.0', port=80)
 
 # Save available output ports
 midi_list = mido.get_output_names()
+midi_output = None
+
+def open_midi(midi_port):
+    global midi_output
+    midi_output = mido.open_output(midi_port)
+    print("MIDI connection opened")
+
+def close_midi():
+    global midi_output
+    if midi_output is not None:
+        midi_output.close()
+        print("MIDI connection closed")
 
 # Function to send MIDI Control Change messages (simulate serial data)
 def send_midi_serial(user,control, value, lbl):
@@ -69,13 +81,12 @@ def send_midi_serial(user,control, value, lbl):
     midi_value = round(scaled_value)
 
     lbl.set_text(f'{show_value}')
-    output_port = mido.open_output(midi_select.value)
 
+    global midi_output
     control_change = Message('control_change', control=control, value=midi_value)
-    output_port.send(control_change)
+    midi_output.send(control_change)
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={show_value}, value={midi_value}')
-    output_port.close()
 
 # Function to send MIDI Control Change messages (simulate serial data)
 def send_midi_linear(user,control, value, lbl):
@@ -84,23 +95,23 @@ def send_midi_linear(user,control, value, lbl):
     midi_value = round(scaled_value)
 
     lbl.set_text(f'{value}')
-    output_port = mido.open_output(midi_select.value)
 
+    global midi_output
     control_change = Message('control_change', control=control, value=midi_value)
-    output_port.send(control_change)
+    midi_output.send(control_change)
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={midi_value}')
-    output_port.close()
+
 
 def send_midi_state(user, control, value):
+    global midi_output
 
-    output_port = mido.open_output(midi_select.value)
     state = 0
     if value:
-       state = 127
+        state = 127
 
     control_change = Message('control_change', control=control, value=state)
-    output_port.send(control_change)
+    midi_output.send(control_change)
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={value}')
     output_port.close()
@@ -158,6 +169,8 @@ ui.add_head_html('''
     
 </style>
 ''')
+
+app.on_shutdown(close_midi)
 
 # Create a card with full-screen width
 midi_select = ui.select(options=midi_list, with_input=False, on_change=lambda e: ui.notify(e.value)).classes('w-40')
@@ -321,5 +334,12 @@ with ui.card().classes('w-full').style('background-color: #464646; color: white;
         ui.label('Volume')
         sl_dov = ui.slider(min=1, max=100).bind_value(demo, 'drums_volume').on_value_change(lambda e: send_midi_serial('Drummer',66, e.value, lb_dov))
         lb_dov= ui.label(f'{demo.drums_volume}')
+try:
+    ui.run()
+except Exception as e:
+    print(e)
+finally:
+    close_midi()
 
-ui.run()
+
+
