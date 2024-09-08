@@ -6,6 +6,7 @@ from nicegui import app, ui
 class Demo:
     def __init__(self):
         self.midi_port = ""
+        self.play_back = False
         self.bass_bass = 100
         self.bass_vocal = 90
         self.bass_back = 90
@@ -14,6 +15,7 @@ class Demo:
         self.bass_ldrums = 90
         self.bass_rdrums = 90
         self.bass_volume = 100
+        self.bass_playback_volume = 90
         self.marshal_high = True
         self.marshal_presence = 100
         self.marshal_bass = 100
@@ -30,6 +32,7 @@ class Demo:
         self.tele_ldrums = 90
         self.tele_rdrums = 90
         self.tele_volume = 100
+        self.tele_playback_volume = 90
         self.prs_prs = 100
         self.prs_vocal = 90
         self.prs_back = 90
@@ -38,6 +41,7 @@ class Demo:
         self.prs_ldrums = 90
         self.prs_rdrums = 90
         self.prs_volume = 100
+        self.prs_playback_volume = 90
         self.drums_ldrums = 100
         self.drums_rdrums = 100
         self.drums_vocal = 90
@@ -46,6 +50,7 @@ class Demo:
         self.drums_prs = 90
         self.drums_tele = 90
         self.drums_volume = 100
+        self.drums_playback_volume = 90
 demo = Demo()
 
 ui.run(host='0.0.0.0', port=80)
@@ -114,9 +119,26 @@ def send_midi_state(user, control, value):
     midi_output.send(control_change)
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={value}')
-    output_port.close()
 
 def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8):
+
+def update_playback(user, solo_control, value, mute_control ):
+    global midi_output
+
+    solo_state = 0
+    mute_state = 127
+    if value:
+       solo_state = 127
+       mute_state = 0
+
+    control_change = Message('control_change', control=solo_control, value=solo_state)
+    midi_output.send(control_change)
+
+    control_change = Message('control_change', control=mute_control, value=mute_state)
+    midi_output.send(control_change)
+
+    print(f'Sent MIDI Control Change: user={user}, solo_control={solo_control}, solo_state={solo_state},mute_control={mute_control}, mute_state={mute_state}')
+
     if not state:
         sl1.enable()
         sl2.enable()
@@ -172,8 +194,13 @@ ui.add_head_html('''
 
 app.on_shutdown(close_midi)
 
+with ui.row().classes('w-full justify-center').style('align-items: center;'):
+    midi_select = ui.select(options=midi_list, with_input=False, on_change=lambda e: ui.notify(e.value)).classes('w-40').on_value_change(
+        lambda e: open_midi(e.value))
+    switch_playback = ui.switch('Playback').bind_value(demo, 'play_back').on_value_change(
+        lambda e: update_playback('All users', 88, e.value, 89))
+
 # Create a card with full-screen width
-midi_select = ui.select(options=midi_list, with_input=False, on_change=lambda e: ui.notify(e.value)).classes('w-40')
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
         ui.label("Bassist's Mix").style('font-size: 20px;')
@@ -203,6 +230,9 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         ui.label('Volume')
         sl_bov = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_linear('bassist', 117, e.value, lb_bov))
         lb_bov = ui.label(f'{demo.bass_volume}')
+        ui.label('Playback')
+        sl_bpbv = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_playback_volume').on_value_change(lambda e: send_midi_serial('bassist',118, e.value, lb_bpbv))
+        lb_bpbv= ui.label(f'{demo.bass_playback_volume}')
 
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
@@ -274,6 +304,9 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         ui.label('Volume')
         sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',106, e.value, lb_vov))
         lb_vov= ui.label(f'{demo.tele_volume}')
+        ui.label('Playback')
+        sl_vpbv = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_playback_volume').on_value_change(lambda e: send_midi_serial('Tele-player',108, e.value, lb_vpbv))
+        lb_vpbv= ui.label(f'{demo.tele_playback_volume}')
 
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
@@ -304,6 +337,9 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         ui.label('Volume')
         sl_pov = ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_serial('Prs-player',7, e.value, lb_pov))
         lb_pov= ui.label(f'{demo.prs_volume}')
+        ui.label('Playback')
+        sl_ppbv = ui.slider(min=1, max=100).bind_value(demo, 'prs_playback_volume').on_value_change(lambda e: send_midi_serial('Prs-player',9, e.value, lb_ppbv))
+        lb_ppbv= ui.label(f'{demo.prs_playback_volume}')
 
 with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
@@ -334,6 +370,9 @@ with ui.card().classes('w-full').style('background-color: #464646; color: white;
         ui.label('Volume')
         sl_dov = ui.slider(min=1, max=100).bind_value(demo, 'drums_volume').on_value_change(lambda e: send_midi_linear('Drummer',17, e.value, lb_dov))
         lb_dov= ui.label(f'{demo.drums_volume}')
+        ui.label('Playback')
+        sl_dpbv = ui.slider(min=1, max=100).bind_value(demo, 'drums_playback_volume').on_value_change(lambda e: send_midi_serial('Drummer',18, e.value, lb_dpbv))
+        lb_dpbv= ui.label(f'{demo.drums_playback_volume}')
 try:
     ui.run()
 except Exception as e:
