@@ -120,7 +120,6 @@ def send_midi_state(user, control, value):
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={value}')
 
-def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8):
 
 def update_playback(user, solo_control, value, mute_control ):
     global midi_output
@@ -139,6 +138,7 @@ def update_playback(user, solo_control, value, mute_control ):
 
     print(f'Sent MIDI Control Change: user={user}, solo_control={solo_control}, solo_state={solo_state},mute_control={mute_control}, mute_state={mute_state}')
 
+def update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8, sl9 = None):
     if not state:
         sl1.enable()
         sl2.enable()
@@ -148,6 +148,8 @@ def update_playback(user, solo_control, value, mute_control ):
         sl6.enable()
         sl7.enable()
         sl8.enable()
+        if sl9 is not None:
+            sl9.enable()
     else:
         sl1.disable()
         sl2.disable()
@@ -157,10 +159,12 @@ def update_playback(user, solo_control, value, mute_control ):
         sl6.disable()
         sl7.disable()
         sl8.disable()
+        if sl9 is not None:
+            sl9.disable()
 
-def update_double_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8, sl9, sl10, sl11, sl12, sl13, sl14, sl15, sl16):
-    update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8)
-    update_slider(state, sl9, sl10, sl11, sl12, sl13, sl14, sl15, sl16)
+def update_double_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8, sl9, sl10, sl11, sl12, sl13, sl14, sl15, sl16,sl17):
+    update_slider(state, sl1, sl2, sl3, sl4, sl5, sl6, sl7, sl8, sl9)
+    update_slider(state, sl10, sl11, sl12, sl13, sl14, sl15, sl16, sl17)
 
 # Add custom CSS to change the slider colors
 ui.add_head_html('''
@@ -204,7 +208,7 @@ with ui.row().classes('w-full justify-center').style('align-items: center;'):
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
         ui.label("Bassist's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bld, sl_brd, sl_bov ))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bld, sl_brd, sl_bov, sl_bpbv ))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
         sl_bb = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_bass').on_value_change(lambda e: send_midi_serial('bassist', 110, e.value, lb_bb))
@@ -238,7 +242,7 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Tele player's Mix").style('font-size: 20px;')
         checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e:
-            update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov,sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo,sl_mig) )
+            update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov,sl_vpbv, sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo,sl_mig) )
     with ui.card().classes('w-full').style('background-color: white; color: black;'):
         sl_msw = ui.switch('High Output').bind_value(demo, 'marshal_high').on_value_change(
             lambda e: send_midi_state('Tele-player', 90, sl_msw.value))
@@ -311,7 +315,7 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Prs player's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pld, sl_prd, sl_pov))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pld, sl_prd, sl_pov, sl_ppbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Prs')
         sl_pp = ui.slider(min=1, max=100).bind_value(demo, 'prs_prs').on_value_change(lambda e: send_midi_serial('Prs-player',0, e.value, lb_pp))
