@@ -330,7 +330,7 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         sl_pt = ui.slider(min=1, max=100).bind_value(demo, 'prs_tele').on_value_change(lambda e: send_midi_serial('Prs-player',3, e.value, lb_pt))
         lb_pt= ui.label(f'{demo.prs_tele}')
         ui.label('Bass')
-        sl_pb = ui.slider(min=1, max=100).bind_value(demo, 'prs_bass').on_value_change(lambda e: send_midi_serial('Prs-player',4, e.value, lb_pb))
+        sl_pb = ui.slider(min=1, max=100).bind_value(demo, 'prs_bass').on_value_change(lambda e: send_midi_serial('Prs-player',8, e.value, lb_pb))
         lb_pb= ui.label(f'{demo.prs_bass}')
         ui.label('Drums left')
         sl_pld = ui.slider(min=1, max=100).bind_value(demo, 'prs_ldrums').on_value_change(lambda e: send_midi_serial('Prs-player', 5, e.value, lb_pld))
