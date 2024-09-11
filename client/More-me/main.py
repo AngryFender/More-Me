@@ -21,8 +21,8 @@ class Demo:
         self.marshal_bass = 100
         self.marshal_middle = 100
         self.marshal_treble = 100
-        self.marshal_master_output = 100
-        self.marshal_lead_output = 100
+        self.marshal_master_output = 90
+        self.marshal_lead_output = 90
         self.marshal_input_gain = 100
         self.tele_tele = 100
         self.tele_vocal = 90
@@ -299,14 +299,14 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         ui.label('Bass')
         sl_vb = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_bass').on_value_change(lambda e: send_midi_serial('Tele-player',104, e.value, lb_vb))
         lb_vb= ui.label(f'{demo.tele_bass}')
-        ui.label('Drums left')
+        ui.label('LDrums')
         sl_vld = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_ldrums').on_value_change(lambda e: send_midi_serial('Tele-player', 105, e.value, lb_vld))
         lb_vld = ui.label(f'{demo.tele_ldrums}')
-        ui.label('Drums right')
-        sl_vrd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_rdrums').on_value_change(lambda e: send_midi_serial('Tele-player',105, e.value, lb_vrd))
+        ui.label('RDrums')
+        sl_vrd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_rdrums').on_value_change(lambda e: send_midi_serial('Tele-player',106, e.value, lb_vrd))
         lb_vrd= ui.label(f'{demo.tele_rdrums}')
         ui.label('Volume')
-        sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_serial('Tele-player',106, e.value, lb_vov))
+        sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_linear('Tele-player',107, e.value, lb_vov))
         lb_vov= ui.label(f'{demo.tele_volume}')
         ui.label('Playback')
         sl_vpbv = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_playback_volume').on_value_change(lambda e: send_midi_serial('Tele-player',108, e.value, lb_vpbv))
@@ -332,14 +332,14 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         ui.label('Bass')
         sl_pb = ui.slider(min=1, max=100).bind_value(demo, 'prs_bass').on_value_change(lambda e: send_midi_serial('Prs-player',8, e.value, lb_pb))
         lb_pb= ui.label(f'{demo.prs_bass}')
-        ui.label('Drums left')
+        ui.label('LDrums')
         sl_pld = ui.slider(min=1, max=100).bind_value(demo, 'prs_ldrums').on_value_change(lambda e: send_midi_serial('Prs-player', 5, e.value, lb_pld))
         lb_pld= ui.label(f'{demo.prs_ldrums}')
-        ui.label('Drums right')
-        sl_prd = ui.slider(min=1, max=100).bind_value(demo, 'prs_rdrums').on_value_change(lambda e: send_midi_serial('Prs-player',5, e.value, lb_prd))
+        ui.label('RDrums')
+        sl_prd = ui.slider(min=1, max=100).bind_value(demo, 'prs_rdrums').on_value_change(lambda e: send_midi_serial('Prs-player',6, e.value, lb_prd))
         lb_prd= ui.label(f'{demo.prs_rdrums}')
         ui.label('Volume')
-        sl_pov = ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_serial('Prs-player',7, e.value, lb_pov))
+        sl_pov = ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_linear('Prs-player',7, e.value, lb_pov))
         lb_pov= ui.label(f'{demo.prs_volume}')
         ui.label('Playback')
         sl_ppbv = ui.slider(min=1, max=100).bind_value(demo, 'prs_playback_volume').on_value_change(lambda e: send_midi_serial('Prs-player',9, e.value, lb_ppbv))
@@ -348,7 +348,7 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
 with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Drummer's Mix").style('font-size: 20px;')
-        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dld, sl_drd, sl_dov))
+        ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dld, sl_drd, sl_dov, sl_dpbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('LDrums')
         sl_dld = ui.slider(min=1, max=100).bind_value(demo, 'drums_ldrums').on_value_change(lambda e: send_midi_serial('Drummer', 10, e.value, lb_dld))
