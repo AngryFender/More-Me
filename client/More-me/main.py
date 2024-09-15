@@ -2,55 +2,56 @@ import mido
 import math
 from mido import Message
 from nicegui import app, ui
+from time import sleep
 
 class Demo:
     def __init__(self):
         self.midi_port = ""
         self.play_back = False
-        self.bass_bass = 100
-        self.bass_vocal = 90
-        self.bass_back = 90
-        self.bass_prs = 90
-        self.bass_tele = 90
-        self.bass_ldrums = 90
-        self.bass_rdrums = 90
-        self.bass_volume = 100
-        self.bass_playback_volume = 90
+        self.bass_bass = 60
+        self.bass_vocal = 60
+        self.bass_back = 60
+        self.bass_prs = 60
+        self.bass_tele = 60
+        self.bass_ldrums = 60
+        self.bass_rdrums = 60
+        self.bass_volume = 60
+        self.bass_playback_volume = 60
         self.marshal_high = True
-        self.marshal_presence = 100
-        self.marshal_bass = 100
-        self.marshal_middle = 100
-        self.marshal_treble = 100
-        self.marshal_master_output = 90
-        self.marshal_lead_output = 90
-        self.marshal_input_gain = 100
-        self.tele_tele = 100
-        self.tele_vocal = 90
-        self.tele_back = 90
-        self.tele_prs = 90
-        self.tele_bass = 90
-        self.tele_ldrums = 90
-        self.tele_rdrums = 90
-        self.tele_volume = 100
-        self.tele_playback_volume = 90
-        self.prs_prs = 100
-        self.prs_vocal = 90
-        self.prs_back = 90
-        self.prs_tele = 90
-        self.prs_bass = 90
-        self.prs_ldrums = 90
-        self.prs_rdrums = 90
-        self.prs_volume = 100
-        self.prs_playback_volume = 90
-        self.drums_ldrums = 100
-        self.drums_rdrums = 100
-        self.drums_vocal = 90
-        self.drums_back = 90
-        self.drums_bass = 90
-        self.drums_prs = 90
-        self.drums_tele = 90
-        self.drums_volume = 100
-        self.drums_playback_volume = 90
+        self.marshal_presence = 60
+        self.marshal_bass = 60
+        self.marshal_middle = 60
+        self.marshal_treble = 60
+        self.marshal_master_output = 60
+        self.marshal_lead_output = 60
+        self.marshal_input_gain = 60
+        self.tele_tele = 60
+        self.tele_vocal = 60
+        self.tele_back = 60
+        self.tele_prs = 60
+        self.tele_bass = 60
+        self.tele_ldrums = 60
+        self.tele_rdrums = 60
+        self.tele_volume = 60
+        self.tele_playback_volume = 60
+        self.prs_prs = 60
+        self.prs_vocal = 60
+        self.prs_back = 60
+        self.prs_tele = 60
+        self.prs_bass = 60
+        self.prs_ldrums = 60
+        self.prs_rdrums = 60
+        self.prs_volume = 60
+        self.prs_playback_volume = 60
+        self.drums_ldrums = 60
+        self.drums_rdrums = 60
+        self.drums_vocal = 60
+        self.drums_back = 60
+        self.drums_bass = 60
+        self.drums_prs = 60
+        self.drums_tele = 60
+        self.drums_volume = 60
+        self.drums_playback_volume = 60
 demo = Demo()
 
 ui.run(host='0.0.0.0', port=80)
