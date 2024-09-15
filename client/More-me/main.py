@@ -64,6 +64,13 @@ def open_midi(midi_port):
     global midi_output
     midi_output = mido.open_output(midi_port)
     print("MIDI connection opened")
+    print("Setting default values")
+    for x in range(0, 20):
+        send_midi_serial('default',x,60)
+        sleep(0.02)
+    for x in range(90, 120):
+        send_midi_serial('default',x,60)
+        sleep(0.02)
 
 def close_midi():
     global midi_output
@@ -72,7 +79,7 @@ def close_midi():
         print("MIDI connection closed")
 
 # Function to send MIDI Control Change messages (simulate serial data)
-def send_midi_serial(user,control, value, lbl):
+def send_midi_serial(user,control, value, lbl = None):
     normalized_value = (value - 1) / (100 - 1)
 
     # Apply logarithmic scaling to make the upper range more sensitive
@@ -86,7 +93,8 @@ def send_midi_serial(user,control, value, lbl):
     scaled_value = log_transformed * 103
     midi_value = round(scaled_value)
 
-    lbl.set_text(f'{show_value}')
+    if lbl is not None:
+        lbl.set_text(f'{show_value}')
 
     global midi_output
     control_change = Message('control_change', control=control, value=midi_value)
@@ -380,6 +388,7 @@ with ui.card().classes('w-full').style('background-color: #464646; color: white;
         lb_dpbv= ui.label(f'{demo.drums_playback_volume}')
 try:
     ui.run()
+
 except Exception as e:
     print(e)
 finally:
