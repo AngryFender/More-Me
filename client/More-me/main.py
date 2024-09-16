@@ -248,10 +248,6 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         lb_bpbv= ui.label(f'{demo.bass_playback_volume}')
 
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
-    with ui.row().classes('w-full justify-center').style('align-items: center;'):
-        ui.label("Tele player's Mix").style('font-size: 20px;')
-        checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e:
-            update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov,sl_vpbv, sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo,sl_mig) )
     with ui.card().classes('w-full').style('background-color: white; color: black;'):
         sl_msw = ui.switch('High Output').bind_value(demo, 'marshal_high').on_value_change(
             lambda e: send_midi_state('Tele-player', 90, sl_msw.value))
@@ -292,6 +288,9 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
                 lambda e: send_midi_linear('Tele-player', 97, e.value, lb_mig))
             lb_mig = ui.label(f'{demo.tele_tele}')
 
+    with ui.row().classes('w-full justify-center').style('align-items: center;'):
+        ui.label("Tele player's Mix").style('font-size: 20px;')
+        checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov, sl_vpbv, sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo, sl_mig))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         sl_vt = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',100, e.value, lb_vt))
