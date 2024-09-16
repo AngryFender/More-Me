@@ -129,6 +129,18 @@ def send_midi_state(user, control, value):
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={value}, value={value}')
 
+def update_talkback(user,control,value):
+    global midi_output
+
+    mute_state = 127
+    if value:
+        mute_state = 0
+
+    control_change = Message('control_change', control=control, value=mute_state)
+    midi_output.send(control_change)
+
+    print(f'Sent MIDI Control Change: user={user}, control={control}, solo_state={mute_state}')
+
 
 def update_playback(user, solo_control, value, mute_control ):
     global midi_output
