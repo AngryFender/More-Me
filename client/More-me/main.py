@@ -8,6 +8,7 @@ class Demo:
     def __init__(self):
         self.midi_port = ""
         self.play_back = False
+        self.talk_back = True
         self.bass_bass = 60
         self.bass_vocal = 60
         self.bass_back = 60
@@ -71,6 +72,14 @@ def open_midi(midi_port):
     for x in range(90, 120):
         send_midi_serial('default',x,60)
         sleep(0.02)
+    update_talkback('default',119 , True)
+    sleep(0.02)
+    update_talkback('default', 109, True)
+    sleep(0.02)
+    update_talkback('default', 19, True)
+    sleep(0.02)
+    update_talkback('default', 20, True)
+    sleep(0.02)
 
 def close_midi():
     global midi_output
@@ -229,6 +238,7 @@ with ui.row().classes('w-full justify-center').style('align-items: center;'):
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
         ui.label("Bassist's Mix").style('font-size: 20px;')
+        ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 119, e.value))
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_bb,sl_bv, sl_bvk, sl_bp, sl_bt, sl_bld, sl_brd, sl_bov, sl_bpbv ))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Bass')
@@ -302,6 +312,7 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
 
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Tele player's Mix").style('font-size: 20px;')
+        ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 109, e.value))
         checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov, sl_vpbv, sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo, sl_mig))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
@@ -335,6 +346,7 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
 with ui.card().classes('w-full').style('background-color: #032D61; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Prs player's Mix").style('font-size: 20px;')
+        ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 20, e.value))
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_pb, sl_pv, sl_pvk, sl_pp, sl_pt, sl_pld, sl_prd, sl_pov, sl_ppbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Prs')
@@ -368,6 +380,7 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
 with ui.card().classes('w-full').style('background-color: #464646; color: white;'):
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Drummer's Mix").style('font-size: 20px;')
+        ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 19, e.value))
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dld, sl_drd, sl_dov, sl_dpbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('LDrums')
