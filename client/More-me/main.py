@@ -16,6 +16,7 @@ class Demo:
         self.bass_tele = 90
         self.bass_ldrums = 90
         self.bass_rdrums = 90
+        self.bass_mdrums = 90
         self.bass_volume = 90
         self.bass_playback_volume = 90
         self.marshal_high = True
@@ -33,6 +34,7 @@ class Demo:
         self.tele_bass = 90
         self.tele_ldrums = 90
         self.tele_rdrums = 90
+        self.tele_mdrums = 90
         self.tele_volume = 90
         self.tele_playback_volume = 90
         self.prs_prs = 90
@@ -42,10 +44,12 @@ class Demo:
         self.prs_bass = 90
         self.prs_ldrums = 90
         self.prs_rdrums = 90
+        self.prs_mdrums = 90
         self.prs_volume = 90
         self.prs_playback_volume = 90
         self.drums_ldrums = 90
         self.drums_rdrums = 90
+        self.drums_mdrums = 90
         self.drums_vocal = 90
         self.drums_back = 90
         self.drums_bass = 90
@@ -66,7 +70,7 @@ def open_midi(midi_port):
     midi_output = mido.open_output(midi_port)
     print("MIDI connection opened")
     print("Setting default values")
-    for x in range(0, 20):
+    for x in range(0, 18):
         send_midi_serial('default',x,90)
         sleep(0.02)
     for x in range(90, 120):
@@ -150,6 +154,45 @@ def update_talkback(user,control,value):
 
     print(f'Sent MIDI Control Change: user={user}, control={control}, solo_state={mute_state}')
 
+def show_midi_drums(value):
+    lbl_bmd.set_visibility(value)
+    sl_bmd.set_visibility(value)
+    lb_bmd.set_visibility(value)
+    lbl_vmd.set_visibility(value)
+    sl_vmd.set_visibility(value)
+    lb_vmd.set_visibility(value)
+    lbl_pmd.set_visibility(value)
+    sl_pmd.set_visibility(value)
+    lb_pmd.set_visibility(value)
+    lbl_dmd.set_visibility(value)
+    sl_dmd.set_visibility(value)
+    lb_dmd.set_visibility(value)
+
+def show_audio_drums( value ):
+    lbl_bld.set_visibility(value)
+    sl_bld.set_visibility(value)
+    lb_bld.set_visibility(value)
+    lbl_brd.set_visibility(value)
+    sl_brd.set_visibility(value)
+    lb_brd.set_visibility(value)
+    lbl_vld.set_visibility(value)
+    sl_vld.set_visibility(value)
+    lb_vld.set_visibility(value)
+    lbl_vrd.set_visibility(value)
+    sl_vrd.set_visibility(value)
+    lb_vrd.set_visibility(value)
+    lbl_pld.set_visibility(value)
+    sl_pld.set_visibility(value)
+    lb_pld.set_visibility(value)
+    lbl_prd.set_visibility(value)
+    sl_prd.set_visibility(value)
+    lb_prd.set_visibility(value)
+    lbl_dld.set_visibility(value)
+    sl_dld.set_visibility(value)
+    lb_dld.set_visibility(value)
+    lbl_drd.set_visibility(value)
+    sl_drd.set_visibility(value)
+    lb_drd.set_visibility(value)
 
 def update_playback(user, solo_control, value, mute_control ):
     global midi_output
@@ -233,7 +276,8 @@ with ui.row().classes('w-full justify-center').style('align-items: center;'):
         lambda e: open_midi(e.value))
     switch_playback = ui.switch('Playback').bind_value(demo, 'play_back').on_value_change(
         lambda e: update_playback('All users', 88, e.value, 89))
-
+    ui.switch('Show midi-drum').on_value_change( lambda e: show_midi_drums(e.value))
+    ui.switch('Show audio-drum').on_value_change(lambda e: show_audio_drums( e.value))
 # Create a card with full-screen width
 with ui.card().classes('w-full').style('background-color: #a32425; color: white;'):  # Set width to full screen
     with ui.row().classes('w-full justify-center').style('align-items: center; left-padding:4px'):
@@ -256,12 +300,15 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         ui.label('Tele')
         sl_bt = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_tele').on_value_change(lambda e: send_midi_serial('bassist',114, e.value, lb_bt))
         lb_bt= ui.label(f'{demo.bass_tele}')
-        ui.label('LDrums')
+        lbl_bld = ui.label('LDrums')
         sl_bld = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_ldrums').on_value_change(lambda e: send_midi_serial('bassist',115, e.value, lb_bld))
         lb_bld= ui.label(f'{demo.bass_ldrums}')
-        ui.label('RDrums')
+        lbl_brd = ui.label('RDrums')
         sl_brd = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_rdrums').on_value_change(lambda e: send_midi_serial('bassist', 116, e.value, lb_brd))
         lb_brd = ui.label(f'{demo.bass_ldrums}')
+        lbl_bmd = ui.label('MDrums')
+        sl_bmd = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_mdrums').on_value_change(lambda e: send_midi_serial('bassist', 119, e.value, lb_bmd))
+        lb_bmd = ui.label(f'{demo.bass_mdrums}')
         ui.label('Volume')
         sl_bov = ui.slider(min=1, max=100).classes('bass-slider').bind_value(demo, 'bass_volume').on_value_change(lambda e: send_midi_linear('bassist', 117, e.value, lb_bov))
         lb_bov = ui.label(f'{demo.bass_volume}')
@@ -330,12 +377,15 @@ with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;
         ui.label('Bass')
         sl_vb = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_bass').on_value_change(lambda e: send_midi_serial('Tele-player',104, e.value, lb_vb))
         lb_vb= ui.label(f'{demo.tele_bass}')
-        ui.label('LDrums')
+        lbl_vld = ui.label('LDrums')
         sl_vld = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_ldrums').on_value_change(lambda e: send_midi_serial('Tele-player', 105, e.value, lb_vld))
         lb_vld = ui.label(f'{demo.tele_ldrums}')
-        ui.label('RDrums')
+        lbl_vrd= ui.label('RDrums')
         sl_vrd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_rdrums').on_value_change(lambda e: send_midi_serial('Tele-player',106, e.value, lb_vrd))
         lb_vrd= ui.label(f'{demo.tele_rdrums}')
+        lbl_vmd = ui.label('MDrums')
+        sl_vmd = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_mdrums').on_value_change(lambda e: send_midi_serial('Tele-player', 109, e.value, lb_vmd))
+        lb_vmd = ui.label(f'{demo.tele_mdrums}')
         ui.label('Volume')
         sl_vov = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_volume').on_value_change(lambda e: send_midi_linear('Tele-player',107, e.value, lb_vov))
         lb_vov= ui.label(f'{demo.tele_volume}')
@@ -364,12 +414,15 @@ with ui.card().classes('w-full').style('background-color: #032D61; color: white;
         ui.label('Bass')
         sl_pb = ui.slider(min=1, max=100).bind_value(demo, 'prs_bass').on_value_change(lambda e: send_midi_serial('Prs-player',8, e.value, lb_pb))
         lb_pb= ui.label(f'{demo.prs_bass}')
-        ui.label('LDrums')
+        lbl_pld = ui.label('LDrums')
         sl_pld = ui.slider(min=1, max=100).bind_value(demo, 'prs_ldrums').on_value_change(lambda e: send_midi_serial('Prs-player', 5, e.value, lb_pld))
         lb_pld= ui.label(f'{demo.prs_ldrums}')
-        ui.label('RDrums')
+        lbl_prd = ui.label('RDrums')
         sl_prd = ui.slider(min=1, max=100).bind_value(demo, 'prs_rdrums').on_value_change(lambda e: send_midi_serial('Prs-player',6, e.value, lb_prd))
         lb_prd= ui.label(f'{demo.prs_rdrums}')
+        lbl_pmd = ui.label('MDrums')
+        sl_pmd = ui.slider(min=1, max=100).bind_value(demo, 'prs_mdrums').on_value_change(lambda e: send_midi_serial('prs-player', 20, e.value, lb_pmd))
+        lb_pmd = ui.label(f'{demo.prs_mdrums}')
         ui.label('Volume')
         sl_pov = ui.slider(min=1, max=100).bind_value(demo, 'prs_volume').on_value_change(lambda e: send_midi_linear('Prs-player',7, e.value, lb_pov))
         lb_pov= ui.label(f'{demo.prs_volume}')
@@ -383,10 +436,13 @@ with ui.card().classes('w-full').style('background-color: #464646; color: white;
         ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 19, e.value))
         ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_db, sl_dv, sl_dvk, sl_dp, sl_dt, sl_dld, sl_drd, sl_dov, sl_dpbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
-        ui.label('LDrums')
+        lbl_dmd = ui.label('MDrums')
+        sl_dmd = ui.slider(min=1, max=100).bind_value(demo, 'drums_mdrums').on_value_change(lambda e: send_midi_serial('Drummer', 21, e.value, lb_dmd))
+        lb_dmd = ui.label(f'{demo.drums_mdrums}')
+        lbl_dld = ui.label('LDrums')
         sl_dld = ui.slider(min=1, max=100).bind_value(demo, 'drums_ldrums').on_value_change(lambda e: send_midi_serial('Drummer', 10, e.value, lb_dld))
         lb_dld = ui.label(f'{demo.drums_ldrums}')
-        ui.label('RDrums')
+        lbl_drd = ui.label('RDrums')
         sl_drd = ui.slider(min=1, max=100).bind_value(demo, 'drums_rdrums').on_value_change(lambda e: send_midi_serial('Drummer',11, e.value, lb_drd))
         lb_drd = ui.label(f'{demo.drums_rdrums}')
         ui.label('Vocal')
