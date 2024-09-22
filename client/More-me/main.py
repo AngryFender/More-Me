@@ -20,13 +20,13 @@ class Demo:
         self.bass_volume = 90
         self.bass_playback_volume = 90
         self.marshal_high = True
-        self.marshal_presence = 90
-        self.marshal_bass = 90
-        self.marshal_middle = 90
-        self.marshal_treble = 90
-        self.marshal_master_output = 90
-        self.marshal_lead_output = 90
-        self.marshal_input_gain = 90
+        self.marshal_presence = 80
+        self.marshal_bass = 53
+        self.marshal_middle = 66
+        self.marshal_treble = 70
+        self.marshal_master_output = 22
+        self.marshal_lead_output = 73
+        self.marshal_input_gain = 46
         self.tele_tele = 90
         self.tele_vocal = 90
         self.tele_back = 90
@@ -73,7 +73,7 @@ def open_midi(midi_port):
     for x in range(0, 18):
         send_midi_serial('default',x,90)
         sleep(0.02)
-    for x in range(90, 120):
+    for x in range(98, 120):
         send_midi_serial('default',x,90)
         sleep(0.02)
     update_talkback('default',119 , True)
@@ -83,6 +83,23 @@ def open_midi(midi_port):
     update_talkback('default', 19, True)
     sleep(0.02)
     update_talkback('default', 20, True)
+    sleep(0.02)
+
+    update_talkback('default', 90, True)
+    sleep(0.02)
+    send_midi_linear('default', 91, 80,lb_mp)
+    sleep(0.02)
+    send_midi_linear('default', 92, 53,lb_mb)
+    sleep(0.02)
+    send_midi_linear('default', 93, 66,lb_mm)
+    sleep(0.02)
+    send_midi_linear('default', 94, 70,lb_mt)
+    sleep(0.02)
+    send_midi_linear('default', 95, 22,lb_mmo)
+    sleep(0.02)
+    send_midi_linear('default', 96, 73,lb_mlo)
+    sleep(0.02)
+    send_midi_linear('default', 97, 46,lb_mig)
     sleep(0.02)
 
 def close_midi():
@@ -116,12 +133,13 @@ def send_midi_serial(user,control, value, lbl = None):
     print(f'Sent MIDI Control Change: user={user}, control={control}, percentage={show_value}, value={midi_value}')
 
 # Function to send MIDI Control Change messages (simulate serial data)
-def send_midi_linear(user,control, value, lbl):
+def send_midi_linear(user,control, value, lbl=None):
 
     scaled_value = value * 1.27
     midi_value = round(scaled_value)
 
-    lbl.set_text(f'{value}')
+    if lbl:
+        lbl.set_text(f'{value}')
 
     global midi_output
     control_change = Message('control_change', control=control, value=midi_value)
