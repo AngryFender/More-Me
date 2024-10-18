@@ -19,14 +19,6 @@ class Demo:
         self.bass_mdrums = 90
         self.bass_volume = 90
         self.bass_playback_volume = 90
-        self.marshal_high = True
-        self.marshal_presence = 80
-        self.marshal_bass = 53
-        self.marshal_middle = 66
-        self.marshal_treble = 70
-        self.marshal_master_output = 22
-        self.marshal_lead_output = 73
-        self.marshal_input_gain = 46
         self.tele_tele = 90
         self.tele_vocal = 90
         self.tele_back = 90
@@ -84,22 +76,7 @@ def open_midi(midi_port):
     sleep(0.02)
     update_talkback('default', 20, True)
     sleep(0.02)
-
     update_talkback('default', 90, True)
-    sleep(0.02)
-    send_midi_linear('default', 91, 80,lb_mp)
-    sleep(0.02)
-    send_midi_linear('default', 92, 53,lb_mb)
-    sleep(0.02)
-    send_midi_linear('default', 93, 66,lb_mm)
-    sleep(0.02)
-    send_midi_linear('default', 94, 70,lb_mt)
-    sleep(0.02)
-    send_midi_linear('default', 95, 22,lb_mmo)
-    sleep(0.02)
-    send_midi_linear('default', 96, 73,lb_mlo)
-    sleep(0.02)
-    send_midi_linear('default', 97, 46,lb_mig)
     sleep(0.02)
 
 def close_midi():
@@ -335,50 +312,10 @@ with ui.card().classes('w-full').style('background-color: #a32425; color: white;
         lb_bpbv= ui.label(f'{demo.bass_playback_volume}')
 
 with ui.card().classes('w-full').style('background-color: #d6a86d; color: white;'):
-    with ui.card().classes('w-full').style('background-color: white; color: black;'):
-        sl_msw = ui.switch('High Output').bind_value(demo, 'marshal_high').on_value_change(
-            lambda e: send_midi_state('Tele-player', 90, sl_msw.value))
-        with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
-
-            ui.label('Presence')
-            sl_mp = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_presence').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 91, e.value, lb_mp))
-            lb_mp= ui.label(f'{demo.tele_tele}')
-
-            ui.label('Bass')
-            sl_mb = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_bass').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 92, e.value, lb_mb))
-            lb_mb= ui.label(f'{demo.tele_tele}')
-
-            ui.label('Middle')
-            sl_mm = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_middle').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 93, e.value, lb_mm))
-            lb_mm = ui.label(f'{demo.tele_tele}')
-
-            ui.label('Treble')
-            sl_mt = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_treble').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 94, e.value, lb_mt))
-            lb_mt = ui.label(f'{demo.tele_tele}')
-
-            ui.label('Master Output')
-            sl_mmo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_master_output').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 95, e.value, lb_mmo))
-            lb_mmo = ui.label(f'{demo.tele_tele}')
-
-            ui.label('Lead Output')
-            sl_mlo = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_lead_output').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 96, e.value, lb_mlo))
-            lb_mlo = ui.label(f'{demo.tele_tele}')
-
-            ui.label('Input Gain')
-            sl_mig = ui.slider(min=1, max=100).classes('marshal-slider').bind_value(demo, 'marshal_input_gain').on_value_change(
-                lambda e: send_midi_linear('Tele-player', 97, e.value, lb_mig))
-            lb_mig = ui.label(f'{demo.tele_tele}')
-
     with ui.row().classes('w-full justify-center').style('align-items: center;'):
         ui.label("Tele player's Mix").style('font-size: 20px;')
         ui.switch('Talk back').bind_value(demo, 'talk_back').on_value_change(lambda e: update_talkback('All users', 109, e.value))
-        checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_double_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov, sl_vpbv, sl_msw, sl_mp, sl_mb, sl_mm, sl_mt, sl_mmo, sl_mlo, sl_mig))
+        checkbox_tele = ui.checkbox('Lock').classes('ml-auto').on_value_change(lambda e: update_slider(e.value, sl_vb,sl_vv, sl_vvk, sl_vp, sl_vt, sl_vld, sl_vrd, sl_vov, sl_vpbv))
     with ui.grid().classes("w-full").style("align-items: center; grid-template-columns:  50px auto 30px"):
         ui.label('Tele')
         sl_vt = ui.slider(min=1, max=100).classes('tele-slider').bind_value(demo, 'tele_tele').on_value_change(lambda e: send_midi_serial('Tele-player',100, e.value, lb_vt))
